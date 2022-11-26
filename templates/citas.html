@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block tittle %}
+    Agendar Cita
+{% endblock tittle %}
+
+
+{% block content %}
+{% include 'navbar.html' %}
+
+<div class="card">
+    <div class="card-body">
+        <h2>Citas</h2>
+        <hr>
+        <table class="table table-striped table-hover table-resposive-sm">
+            <tr>
+                <th> Asunto </th>
+                <th> Fecha </th>
+                <th> Hora </th>
+                <th> Propiedad </th>
+                <th> Estado </th>
+                <th> Opciones </th>
+            </tr>
+            {% if citas %}
+                {% for cita in citas %}
+                    <tr>
+                        <td>{{ cita.asunto }}</td>
+                        <td>{{ cita.fecha }}</td>
+                        <td>{{ cita.hora }}</td>
+                        <td>{{ cita.propiedad }}</td>
+                        <td>{{ cita.estado  }} </td>
+                        <td>
+                            <a class="btn btn-info" href="{% url 'editarCita' cita.id %}">Editar</a>
+                            <a class="btn btn-warning" href="{% url 'eliminarCita' cita.id %}">Eliminar</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+        </table>
+    </div>
+</div>
+
+
+{% endblock content %}
+        
