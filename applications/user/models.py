@@ -20,6 +20,10 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
         ('CP','Cliente_Particular'),
         ('CC','Cliente_Corporativo'),
     )
+    DEPARTAMENTO = (
+        ('COM', 'Comercializacion'),
+        ('ADM', 'Administracion'),
+    )
     username = models.CharField(max_length=20, unique=True)
     dni_cuil = models.CharField(max_length=20)  # Field name made lowercase.
     email = models.CharField(max_length=50, null=True, blank=True)
@@ -27,7 +31,7 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     apellidos = models.CharField(max_length=50, null=True, blank=True)  # Field name made lowercase.
     sexo = models.CharField(choices=SEXO, max_length=10, default='NE')  # Field name made lowercase.
     salario_mensual = models.DecimalField(max_digits=10, decimal_places=0, null=True, blank=True)  # Field name made lowercase.
-    departamento = models.CharField(max_length=16, null=True, blank=True)  # Field name made lowercase.
+    departamento = models.CharField(choices=DEPARTAMENTO, max_length=16, null=True, blank=True)  # Field name made lowercase.
     foto_perfil = models.TextField(blank=True, null=True)  # Field name made lowercase.
     tipo_usuario = models.CharField(choices=TIPO_USUARIO, max_length=10)  # Field name made lowercase.    
     is_staff= models.BooleanField(default=False)
@@ -35,13 +39,6 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['dni_cuil','nombres','tipo_usuario',]
-
-    def save_model(self, request, obj, form, change):
-        if obj.password.startswith('pbkdf2'):
-            obj.password=obj.password
-        else:
-            obj.set_password(obj.password) 
-        super().save_model(request, obj, form, change)
     
     class Meta:
         db_table = 'usuario'
