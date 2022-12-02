@@ -315,3 +315,45 @@ class CobroPendCliente(models.Model):
 
     class Meta:
         db_table = 'cobro_pend_cliente'
+
+
+class RegistroDeCitas(models.Model):
+    id_registro = models.AutoField(db_column='ID_Registro', primary_key=True)  # Field name made lowercase.
+    nro_cita = models.PositiveIntegerField(db_column='NRO_Cita')  # Field name made lowercase.
+    fechas_field = models.CharField(db_column='Fechas=>', max_length=8)  # Field name made lowercase. Field renamed to remove unsuitable characters. Field renamed because it ended with '_'.
+    fh_creacion = models.DateTimeField(db_column='FH_Creacion')  # Field name made lowercase.
+    fh_asignacion = models.DateTimeField(db_column='FH_Asignacion')  # Field name made lowercase.
+    fh_cita = models.DateTimeField(db_column='FH_Cita')  # Field name made lowercase.
+    fh_conclusion = models.DateTimeField(db_column='FH_Conclusion')  # Field name made lowercase.
+    secretaria_field = models.CharField(db_column='Secretaria=>', max_length=12)  # Field name made lowercase. Field renamed to remove unsuitable characters. Field renamed because it ended with '_'.
+    nombre_secretaria = models.CharField(db_column='Nombre_Secretaria', max_length=50)  # Field name made lowercase.
+    apellido_secretaria = models.CharField(db_column='Apellido_Secretaria', max_length=50, blank=True, null=True)  # Field name made lowercase.
+    dni_secretaria = models.CharField(db_column='DNI_Secretaria', max_length=20)  # Field name made lowercase.
+    sexo_secretaria = models.CharField(db_column='Sexo_Secretaria', max_length=13, blank=True, null=True)  # Field name made lowercase.
+    agente_inmobiliatio_field = models.CharField(db_column='Agente Inmobiliatio=>', max_length=21)  # Field name made lowercase. Field renamed to remove unsuitable characters. Field renamed because it ended with '_'.
+    nombre_ai = models.CharField(db_column='Nombre_AI', max_length=50)  # Field name made lowercase.
+    apellido_ai = models.CharField(db_column='Apellido_AI', max_length=50, blank=True, null=True)  # Field name made lowercase.
+    dni_ai = models.CharField(db_column='DNI_AI', max_length=20)  # Field name made lowercase.
+    sexo_ai = models.CharField(db_column='Sexo_AI', max_length=13, blank=True, null=True)  # Field name made lowercase.
+    cliente_field = models.CharField(db_column='Cliente=>', max_length=9)  # Field name made lowercase. Field renamed to remove unsuitable characters. Field renamed because it ended with '_'.
+    nombre_cliente = models.CharField(db_column='Nombre_Cliente', max_length=50)  # Field name made lowercase.
+    apellido_cliente = models.CharField(db_column='Apellido_Cliente', max_length=50, blank=True, null=True)  # Field name made lowercase.
+    dni_cliente = models.CharField(db_column='DNI_Cliente', max_length=20)  # Field name made lowercase.
+    sexo_cliente = models.CharField(db_column='Sexo_Cliente', max_length=13, blank=True, null=True)  # Field name made lowercase.
+    propiedad_field = models.CharField(db_column='Propiedad=>', max_length=11)  # Field name made lowercase. Field renamed to remove unsuitable characters. Field renamed because it ended with '_'.
+    ciudad_prop = models.CharField(db_column='Ciudad_Prop', max_length=20)  # Field name made lowercase.
+    provincia_prop = models.CharField(db_column='Provincia_Prop', max_length=20)  # Field name made lowercase.
+    pais_prop = models.CharField(db_column='Pais_Prop', max_length=20)  # Field name made lowercase.
+    direccion_prop = models.CharField(db_column='Direccion_Prop', max_length=100)  # Field name made lowercase.
+    tipo_prop = models.CharField(db_column='Tipo_Prop', max_length=12)  # Field name made lowercase.
+    pisos_prop = models.PositiveIntegerField(db_column='Pisos_Prop')  # Field name made lowercase.
+    metros_cuadrados_prop = models.DecimalField(db_column='Metros_Cuadrados_Prop', max_digits=10, decimal_places=0)  # Field name made lowercase.
+    estado_prop = models.CharField(db_column='Estado_Prop', max_length=8)  # Field name made lowercase.
+    dueño_field = models.CharField(db_column='Dueño=>', max_length=7)  # Field name made lowercase. Field renamed to remove unsuitable characters. Field renamed because it ended with '_'.
+    nombre_dueño = models.CharField(db_column='Nombre_Dueño', max_length=50)  # Field name made lowercase.
+    apellido_dueño = models.CharField(db_column='Apellido_Dueño', max_length=50, blank=True, null=True)  # Field name made lowercase.
+    dni_dueño = models.CharField(db_column='DNI_Dueño', max_length=20)  # Field name made lowercase.
+    sexo_dueño = models.CharField(db_column='Sexo_Dueño', max_length=13, blank=True, null=True)  # Field name made lowercase.
+
+    class Meta:
+        db_table = 'registro_de_citas'
