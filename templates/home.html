@@ -1,11 +1,17 @@
 {% extends 'base.html' %}
 {% load static %}
-
+    
 {% block tittle %} Domus 2.0 - Home {% endblock tittle %}
 
 {% block content %}
-<div class="text-center">
-    <img src="{% static 'img/inmobiliaria-scaled.jpg' %}" style="width: 300px;"/>
+<div class="d-flex align-items-center justify-content-center p-5">
+    <div class="card" style="width: 50rem;">
+        <img src="{% static 'img/home.jpg' %}" class="card-img-top" alt="...">
+        <div class="card-body text-center">
+        <h5 class="card-title">!Bienvenido {{ user.nombres }}!</h5>
+        <p class="card-text"><b>DOMUS</b> te da la bienvenida a su sitio web!</p>
+        </div>
+    </div>
 </div>
 
 {% endblock content %}

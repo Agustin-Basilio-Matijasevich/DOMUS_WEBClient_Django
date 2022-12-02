@@ -36,7 +36,7 @@ class CerrarSesionView(View):
             reverse('login')
         )
 
-
+#Vista que se encarga de listar todas aquellas vistas las cuales se categorizan por ser de 'solicitud'
 def CitaList(request):
     citas = Cita.objects.filter(tipo_cita='SOL')
     data = {
@@ -44,7 +44,7 @@ def CitaList(request):
     }
     return render(request, 'SolicitudCita.html', data)
 
-
+#Vista encargada de agregar una nueva cita.(Ya sea de solicitud o agendada)
 def agregarCita(request):
     data = {
             'form': CitaUpdateForm()
@@ -63,6 +63,7 @@ def agregarCita(request):
     
     return render(request,'agregarCita.html', data)
 
+#Vista encargada de modificar una solicitud de cita.
 def modificarCitaSolicitud(request, nro_cita):
     cita = get_object_or_404(Cita, nro_cita=nro_cita)
 
@@ -78,6 +79,7 @@ def modificarCitaSolicitud(request, nro_cita):
         data['form'] = formulario
     return render(request, 'editarCitaSolicitud.html', data)
 
+#Vista que se encarga de modificar una cita que ya fue agendadas
 def modificarCitaAgendada(request, nro_cita):
     cita = get_object_or_404(Cita, nro_cita=nro_cita)
 
@@ -94,6 +96,7 @@ def modificarCitaAgendada(request, nro_cita):
 
     return render(request, 'editarCitaAgendada.html', data)
 
+#Vista encargada de eliminar una solicitud de cita. Retorna a la lista de solicitudes.
 def eliminarCitaSolicitud(request, nro_cita):
     cita = get_object_or_404(Cita, nro_cita=nro_cita)
     cita.delete()
@@ -102,6 +105,7 @@ def eliminarCitaSolicitud(request, nro_cita):
             reverse('solicitudCita')
         )
 
+#Vista encargada de eliminar una cita agendada. Retorna a la agenda.
 def eliminarCitaAgendada(request, nro_cita):
     cita = get_object_or_404(Cita, nro_cita=nro_cita)
     cita.delete()
@@ -110,6 +114,7 @@ def eliminarCitaAgendada(request, nro_cita):
             reverse('agenda')
         )
 
+#Vista que busca todas aquellas citas que cumpla con la fecha que recibimos por GET.
 def buscarFecha(request):
     if request.method=='GET':
         citas = Cita.objects.filter(f_cita=request.GET['date'])
@@ -123,6 +128,7 @@ def buscarFecha(request):
 
         return render(request, 'agenda.html', data)
 
+#Vista que carga todas aquellas citas las cuales fueron agendadas.
 def agenda(request):
     if request.method=='GET':
         citas = Cita.objects.filter(tipo_cita='AG')

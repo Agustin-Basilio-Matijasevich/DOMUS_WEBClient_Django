@@ -170,7 +170,7 @@ class Cita(models.Model):
     h_concluye_cita = models.TimeField(db_column='H_Concluye_Cita', blank=True, null=True)  # Field name made lowercase.
     secre_asigna_cita = models.ForeignKey(Usuario,verbose_name="Secretaria a cargo", db_column='Secre_Asigna_Cita', blank=True, null=True, on_delete=models.RESTRICT, related_name='secre_cita')  #Secretaria quien realiza la cita.
     ai_atiende_cita = models.ForeignKey(Usuario,verbose_name="Agente inmobiliario asignado", db_column='AI_Atiende_Cita', blank=True, null=True, on_delete=models.RESTRICT, related_name='ai_cita', limit_choices_to={'tipo_usuario':'EAI'})  #Agente, quien esta cargo esa cita.
-    client_solicita_cita = models.ForeignKey(Usuario,verbose_name="Cliente quien solicita", db_column='Client_Solicita_Cita', on_delete=models.RESTRICT, limit_choices_to={'tipo_usuario':'CP','tipo_usuario':'CC'}) #Cliente quien solicita la cita.
+    client_solicita_cita = models.ForeignKey(Usuario,verbose_name="Cliente quien solicita", db_column='Client_Solicita_Cita', on_delete=models.RESTRICT, limit_choices_to=Q(tipo_usuario='CP') | Q(tipo_usuario='CC')) #Cliente quien solicita la cita.
     propiedad_involucrada = models.ForeignKey(Propiedad,verbose_name="Codigo de propiedad", db_column='Propiedad_Involucrada', on_delete=models.CASCADE)  #Propiedad
     tipo_cita = models.CharField(choices=TIPO_CITA,verbose_name="Cita de tipo", db_column='Tipo_Cita', max_length=9)  #Tipo de cita, si es una solicitud o una cita agendada.
 
