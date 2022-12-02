@@ -1,35 +1,34 @@
 {% extends 'base.html' %}
 
-
 {% block tittle %}
-    Agregar nueva Cita
+    Modificar cita - Domus 2.0
 {% endblock tittle %}
-    
+
+
 {% block content %}
 {% load crispy_forms_tags %}
 
-<div class="col-7 ol-md-2 offset-md-3 p-md-5 ">
+<div class="col-5 ol-md-3 offset-md-3 p-md-5 ">
     <div class="card">
         <div class="card-body">
             <form action="" method="post">
                 {% csrf_token %}
-                {{ form.media }}
-                <label>1. Nombre del secretario quien realiza la cita:</label>
+                <label>1. Nombre del secretario quien lo realiza:</label>
                 <input type="text" value="{{ user.nombres }}" disabled name="secretario">
-                <br>
-                <label>2. Rellene los siguientes datos:</label>
+                <label>2. Modifique los siguientes datos:</label>
                     
-                {{ form | crispy }}
+                {{ form | crispy}}
 
                 <div class="d-flex justify-content-end">
-                    <a href="{% url 'solicitudCita' %}" class="btn btn-secondary">Cancelar</a>
+                    <a class="btn btn-secondary" href='{% url "agenda" %}' value="Cancelar">Cancelar</a>
                     &nbsp;
-                    <input type="submit" value="Agendar" class="btn btn-primary">
+                    <input type="submit" value="Guardar" class="btn btn-primary">
                 </div>
             </form>
 
         </div>
     </div>
-</div>        
+</div>
+    
 {% endblock content %}
     

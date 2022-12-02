@@ -13,7 +13,7 @@
                     <a class="nav-link text-light" href="#">Clientes</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-light" href="{% url 'solicitud' %}">Solicitud de Citas</a>
+                    <a class="nav-link text-light" href="{% url 'solicitudCita' %}">Solicitud de Citas</a>
                 </li>
                 <li>
                   <div class="btn-group">
@@ -21,7 +21,7 @@
                       Agenda
                     </button>
                     <ul class="dropdown-menu">
-                      <li><a class="dropdown-item" href="#">Ver Agenda</a></li>
+                      <li><a class="dropdown-item" href="{% url 'agenda' %}">Ver Agenda</a></li>
                       <li><a class="dropdown-item" href="{% url 'agendarCita' %}">Agendar nueva cita</a></li>
                     </ul>
                   </div>

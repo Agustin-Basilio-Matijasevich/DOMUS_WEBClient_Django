@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block tittle %}
-    Agendar Cita
+    Solicitud de Citas - Domus 2.0
 {% endblock tittle %}
 
 
@@ -27,8 +27,8 @@
                         <td>{{ cita.client_solicita_cita }}</td>
                         <td>{{ cita.propiedad_involucrada }}</td>
                         <td>
-                            <a class="btn btn-info" href="{% url 'modificarCita' cita.nro_cita %}">Agendar</a>
-                            <a class="btn btn-warning" href="{% url 'eliminarCita' cita.nro_cita %}">Eliminar</a>
+                            <a class="btn btn-info" href="{% url 'modificarCitaSolicitud' cita.nro_cita %}">Agendar</a>
+                            <a class="btn btn-warning" href="{% url 'eliminarCitaSolicitud' cita.nro_cita %}">Eliminar</a>
                         </td>
                     </tr>
                 {% endfor %}

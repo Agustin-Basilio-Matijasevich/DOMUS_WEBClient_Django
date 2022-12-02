@@ -25,21 +25,36 @@ urlpatterns = [
     path(
         'solicitudCitas/',
         views.CitaList,
-        name= 'solicitud'
+        name= 'solicitudCita'
     ),
     path(
-        'modificarCita/<nro_cita>/',
-        views.modificarCita,
-        name= 'modificarCita'
+        'modificarCitaSolicitud/<nro_cita>/',
+        views.modificarCitaSolicitud,
+        name= 'modificarCitaSolicitud'
     ),
     path(
-        'eliminarCita/<nro_cita>/',
-        views.eliminarCita,
-        name= 'eliminarCita'
+        'modificarCitaAgendada/<nro_cita>/',
+        views.modificarCitaAgendada,
+        name= 'modificarCitaAgendada'
     ),
     path(
-        'buscarCita/<date>/',
+        'eliminarCitaSolicitud/<nro_cita>/',
+        views.eliminarCitaSolicitud,
+        name= 'eliminarCitaSolicitud'
+    ),
+    path(
+        'eliminarCitaAgendada/<nro_cita>/',
+        views.eliminarCitaAgendada,
+        name= 'eliminarCitaAgendada'
+    ),
+    path(
+        'buscarCita',
         views.buscarFecha,
+        name= 'buscarCita'
+    ),
+    path(
+        'agenda/',
+        views.agenda,
         name= 'agenda'
     ),
 ]

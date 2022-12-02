@@ -2,7 +2,7 @@ import datetime
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import TemplateView, ListView, CreateView, View
 from django.views.generic.edit import FormView
-from .forms import LoginUsuarioForm, CitaUpdateForm
+from .forms import LoginUsuarioForm, CitaUpdateForm, CitaForm
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect
@@ -42,7 +42,7 @@ def CitaList(request):
     data = {
         'citas': citas
     }
-    return render(request, 'citas.html', data)
+    return render(request, 'SolicitudCita.html', data)
 
 
 def agregarCita(request):
@@ -56,14 +56,14 @@ def agregarCita(request):
         if formulario.is_valid():
             formulario.save()
             messages.success(request, 'Cita agendada con exito')
-            return redirect(to='solicitud')
+            return redirect(to='solicitudCita')
         else:
             data["form"] = formulario
             messages.error(request,"Error al crear cita.")
     
     return render(request,'agregarCita.html', data)
 
-def modificarCita(request, nro_cita):
+def modificarCitaSolicitud(request, nro_cita):
     cita = get_object_or_404(Cita, nro_cita=nro_cita)
 
     data = {
@@ -74,31 +74,65 @@ def modificarCita(request, nro_cita):
         if formulario.is_valid():
             formulario.save()
             messages.success(request, 'Cita modificada con exito')
-            return redirect(to='solicitud')
+            return redirect(to='solicitudCita')
+        data['form'] = formulario
+    return render(request, 'editarCitaSolicitud.html', data)
+
+def modificarCitaAgendada(request, nro_cita):
+    cita = get_object_or_404(Cita, nro_cita=nro_cita)
+
+    data = {
+        'form': CitaUpdateForm(instance=cita)
+    }
+    if request.method == 'POST':
+        formulario = CitaUpdateForm(data=request.POST, instance=cita, files=request.FILES)
+        if formulario.is_valid():
+            formulario.save()
+            messages.success(request, 'Cita modificada con exito')
+            return redirect(to='agenda')
         data['form'] = formulario
 
-    return render(request, 'editarCita.html', data)
+    return render(request, 'editarCitaAgendada.html', data)
 
-def eliminarCita(request, nro_cita):
+def eliminarCitaSolicitud(request, nro_cita):
     cita = get_object_or_404(Cita, nro_cita=nro_cita)
     cita.delete()
     messages.success(request, 'Solicitud de cita eliminada con exito')
     return HttpResponseRedirect(
-            reverse('solicitud')
+            reverse('solicitudCita')
         )
 
-def buscarFecha(request, date):
-    cita = Cita.objects.filter(f_cita=date)
-    print(cita)
-    if cita:
+def eliminarCitaAgendada(request, nro_cita):
+    cita = get_object_or_404(Cita, nro_cita=nro_cita)
+    cita.delete()
+    messages.success(request, 'Solicitud de cita eliminada con exito')
+    return HttpResponseRedirect(
+            reverse('agenda')
+        )
+
+def buscarFecha(request):
+    if request.method=='GET':
+        citas = Cita.objects.filter(f_cita=request.GET['date'])
         data = {
-        'form': cita,
+            'datetime' : datetime.datetime.now()
         }
-    else:
-        messages.error(request,"No se encontraron citas para la fecha indicada.")
-        return redirect(to='agenda')
-    
-    return render(request, 'agenda.html', data)
+        if citas:
+            data['citas'] = citas
+        else:
+            messages.error(request,"No se encontraron citas para la fecha indicada.")
+
+        return render(request, 'agenda.html', data)
+
+def agenda(request):
+    if request.method=='GET':
+        citas = Cita.objects.filter(tipo_cita='AG')
+        
+        data = {
+            'citas': citas,
+            'datetime': datetime.datetime.now()
+        }
+        return render(request, 'agenda.html', data)
+        
     
 
 

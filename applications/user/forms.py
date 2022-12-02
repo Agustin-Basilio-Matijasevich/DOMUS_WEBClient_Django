@@ -2,6 +2,7 @@ import datetime
 from django import forms
 from django.contrib.auth import authenticate
 from .models import Cita,Usuario
+from django.contrib.admin.widgets import AdminDateWidget, AdminTimeWidget
 
 TIPO_CITA = (
         	('SOL', 'Solicitud'),
@@ -74,6 +75,28 @@ class CitaForm(forms.Form):
         return agenteForm
 
 class CitaUpdateForm(forms.ModelForm):
+    f_cita = forms.DateField(
+        label='Fecha',
+        widget=forms.DateInput(
+            format='%Y-%m-%d',
+            attrs={
+                "type": "date",
+                "required": "true",
+                "min": datetime.datetime.now().strftime('%Y-%m-%d'),
+            }),
+            input_formats=('%Y-%m-%d',),
+    )
+    h_cita = forms.TimeField(
+        label='Hora',
+        widget=forms.TimeInput(
+            format='%H:%M',
+            attrs={
+                'type': 'time',
+                'required': 'true'
+            }),
+            input_formats=('%H:%M',),
+    )
+    
     class Meta:
         model = Cita
         fields = (
@@ -84,21 +107,7 @@ class CitaUpdateForm(forms.ModelForm):
             'propiedad_involucrada',
             'tipo_cita',
         )
-        widgets = {
-            'f_cita': DateInput(
-                attrs={
-                    'min': datetime.datetime.strftime(datetime.datetime.now(),'%d/%m/%Y'),
-                    'required': "true",
-                    'required pattern': '\d{4}-\d{2}-\d{2}',
-                }
-            ),
-            'h_cita': DateTime2(
-                attrs={
-                    'required': "true"
-                }
-            ),
-
-        }
+    
 
 
         

@@ -20,8 +20,7 @@
                 {{ form | crispy}}
 
                 <div class="d-flex justify-content-end">
-                    <a href="{% url 'solicitud' %}" class="btn btn-secondary">Volver atras</a>
-                    <input type="reset" href="{% url 'solicitud' %}" value="Cancelar" class="">
+                    <a class="btn btn-secondary" href='{% url "solicitudCita" %}' value="Cancelar">Cancelar</a>
                     &nbsp;
                     <input type="submit" value="Guardar" class="btn btn-primary">
                 </div>
