@@ -1,23 +1,32 @@
 {% load static %}
-
+{% if user.is_authenticated %}
 <nav class="navbar navbar-expand-lg bg-primary">
     <div class="container-fluid">
-      {% if user.is_authenticated %}
         {% if user.tipo_usuario == 'ES' %}
-      <a class="navbar-brand" href="#">Secretaria > </a>
+      <a class="navbar-brand text-light">Secretaria > </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 text-light">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    <a class="nav-link text-light" href="#">Clientes</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'citas' %}">Ver citas</a>
+                    <a class="nav-link text-light" href="{% url 'solicitud' %}">Solicitud de Citas</a>
                 </li>
-                  <a href="#" class="btn btn-success">Agendar cita</a>
-            </ul>
+                <li>
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                      Agenda
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="#">Ver Agenda</a></li>
+                      <li><a class="dropdown-item" href="{% url 'agendarCita' %}">Agendar nueva cita</a></li>
+                    </ul>
+                  </div>
+                </li>
+              </ul>
               <a class="navbar-brand" href="#">
                 <img src="{% static 'img/secretario.png' %}" width="30" height="24">
               </a>
@@ -45,6 +54,7 @@
                       <button type="button" class="btn btn-danger" ><a class="text-start" style="text-decoration: none; color:white;"href="{% url 'logout' %}">Salir</a></button>
             {% endif %}
         </div>
-      {% endif %}  
+      
     </div>
   </nav>
+{% endif %}  

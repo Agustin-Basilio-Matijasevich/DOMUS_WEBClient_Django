@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Usuario
+from .models import Usuario, Cita, Propiedad, Ciudad, Provincia, Pais
 
 admin.site.site_header = 'DOMUS 2.0 Alpha'
 
@@ -23,3 +23,8 @@ class UserAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
 
 admin.site.register(Usuario, UserAdmin)
+admin.site.register(Cita)
+admin.site.register(Propiedad)
+admin.site.register(Ciudad)
+admin.site.register(Provincia)
+admin.site.register(Pais)

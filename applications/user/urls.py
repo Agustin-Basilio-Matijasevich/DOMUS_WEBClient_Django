@@ -1,20 +1,45 @@
 from django.urls import path
-from .views import HomeView,LoginUsuarioView, CerrarSesionView
+from . import views
 
 urlpatterns = [
     path(
         '',
-        HomeView.as_view(),
+        views.HomeView.as_view(),
         name = 'home'
     ),
     path(
         'login/',
-        LoginUsuarioView.as_view(),
+        views.LoginUsuarioView.as_view(),
         name= 'login'
     ),
     path(
         'logout/',
-        CerrarSesionView.as_view(),
+        views.CerrarSesionView.as_view(),
         name= 'logout'
+    ),
+    path(
+        'agendarCita/',
+        views.agregarCita,
+        name= 'agendarCita'
+    ),
+    path(
+        'solicitudCitas/',
+        views.CitaList,
+        name= 'solicitud'
+    ),
+    path(
+        'modificarCita/<nro_cita>/',
+        views.modificarCita,
+        name= 'modificarCita'
+    ),
+    path(
+        'eliminarCita/<nro_cita>/',
+        views.eliminarCita,
+        name= 'eliminarCita'
+    ),
+    path(
+        'buscarCita/<date>/',
+        views.buscarFecha,
+        name= 'agenda'
     ),
 ]

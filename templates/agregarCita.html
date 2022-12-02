@@ -7,27 +7,28 @@
     
 {% block content %}
 {% load crispy_forms_tags %}
-{% include 'navbar.html' %}
-<div class="row">
-        <div class="col-5 ol-md-3 offset-md-3 p-md-5 ">
-            <div class="card">
-                <div class="card-body">
-                    <form action="" method="post">
-                        {% csrf_token %}
-                        
-                        {{ form | crispy }}
-                        
-                        <div class="d-flex justify-content-end">
-                            <input type="reset" value="Cancelar" class="btn btn-secondary">
-                            &nbsp;
-                            <input type="submit" value="Guardar" class="btn btn-primary">
-                        </div>
-                    </form>
 
+<div class="col-7 ol-md-2 offset-md-3 p-md-5 ">
+    <div class="card">
+        <div class="card-body">
+            <form action="" method="post">
+                {% csrf_token %}
+                <label>1. Nombre del secretario quien realiza la cita:</label>
+                <input type="text" value="{{ user.nombres }}" disabled name="secretario">
+                <br>
+                <label>2. Rellene los siguientes datos:</label>
+                    
+                {{ form | crispy }}
+
+                <div class="d-flex justify-content-end">
+                    <a href="{% url 'solicitud' %}" class="btn btn-secondary">Cancelar</a>
+                    &nbsp;
+                    <input type="submit" value="Agendar" class="btn btn-primary">
                 </div>
-            </div>
+            </form>
+
         </div>
-        
     </div>
+</div>        
 {% endblock content %}
     

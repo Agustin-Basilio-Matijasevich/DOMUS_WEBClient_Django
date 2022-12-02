@@ -17,6 +17,7 @@ def get_secret(secret_name, secrets=secret):
         raise ImproperlyConfigured(msg)
 
 SECRET_KEY = get_secret('SECRET_KEY')
+MESSAGE_STORE = 'django.contrib.messages.storage.cookie.CokkieStorage'
 
 # Application definition
 

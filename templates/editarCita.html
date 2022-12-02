@@ -6,7 +6,31 @@
 
 
 {% block content %}
-    {{ form.as_p }}
+{% load crispy_forms_tags %}
+
+<div class="col-5 ol-md-3 offset-md-3 p-md-5 ">
+    <div class="card">
+        <div class="card-body">
+            <form action="" method="post">
+                {% csrf_token %}
+                <label>1. Nombre del secretario quien lo realiza:</label>
+                <input type="text" value="{{ user.nombres }}" disabled name="secretario">
+                <label>2. Modifique los siguientes datos:</label>
+                    
+                {{ form | crispy}}
+
+                <div class="d-flex justify-content-end">
+                    <a href="{% url 'solicitud' %}" class="btn btn-secondary">Volver atras</a>
+                    <input type="reset" href="{% url 'solicitud' %}" value="Cancelar" class="">
+                    &nbsp;
+                    <input type="submit" value="Guardar" class="btn btn-primary">
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+    
 {% endblock content %}
     
     

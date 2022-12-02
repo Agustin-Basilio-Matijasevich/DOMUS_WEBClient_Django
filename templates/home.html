@@ -1,9 +1,12 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block tittle %} Domus 2.0 - Home {% endblock tittle %}
 
 {% block content %}
-    {% include 'navbar.html' %}
-    
+<div class="text-center">
+    <img src="{% static 'img/inmobiliaria-scaled.jpg' %}" style="width: 300px;"/>
+</div>
+
 {% endblock content %}
-    
+

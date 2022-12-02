@@ -1,5 +1,12 @@
+import datetime
 from django import forms
 from django.contrib.auth import authenticate
+from .models import Cita,Usuario
+
+TIPO_CITA = (
+        	('SOL', 'Solicitud'),
+        	('AG', 'Agendada'),
+    )
 
 class LoginUsuarioForm(forms.Form):
     username = forms.CharField(
@@ -32,3 +39,70 @@ class LoginUsuarioForm(forms.Form):
             raise forms.ValidationError('Los datos del usuario no son correctos.')
     
         return self.cleaned_data
+
+class DateInput(forms.DateInput):
+    input_type = 'date'
+
+class DateTime2(forms.DateInput):
+    input_type = 'time'
+
+class InputNumber(forms.DateInput):
+    input_type= 'number'
+
+
+
+
+class CitaForm(forms.Form):
+    Cliente = forms.CharField(max_length=50, required=True)
+    fecha = forms.DateField(widget=DateInput(attrs={
+        'min': datetime.datetime.strftime(datetime.datetime.now(),'%Y-%m-%d'),
+    }))
+    hora= forms.TimeField(widget=DateTime2)
+    Agente_Inmobiliario = forms.CharField(max_length=50, required=True)
+    Codigo_de_Propiedad = forms.IntegerField()
+    tipo_de_cita= forms.CharField(widget=forms.Select(choices=TIPO_CITA))
+
+    def clean_agente(self):
+        clienteForm = self.cleaned_data['Cliente']
+        agenteForm = self.cleaned_data['Agente_Inmobiliario']
+        agenteExist = Usuario.objects.get(nombres=agenteForm)
+
+        if agenteExist:
+            return agenteForm
+        else:
+            raise forms.ValidationError("No existe ningun agente inmboliario con ese nombre.")
+        return agenteForm
+
+class CitaUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Cita
+        fields = (
+            'client_solicita_cita',
+            'f_cita',
+            'h_cita',
+            'ai_atiende_cita',
+            'propiedad_involucrada',
+            'tipo_cita',
+        )
+        widgets = {
+            'f_cita': DateInput(
+                attrs={
+                    'min': datetime.datetime.strftime(datetime.datetime.now(),'%d/%m/%Y'),
+                    'required': "true",
+                    'required pattern': '\d{4}-\d{2}-\d{2}',
+                }
+            ),
+            'h_cita': DateTime2(
+                attrs={
+                    'required': "true"
+                }
+            ),
+
+        }
+
+
+        
+        
+
+
+
