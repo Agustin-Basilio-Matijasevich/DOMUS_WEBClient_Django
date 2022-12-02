@@ -129,6 +129,7 @@ class Propiedad(models.Model):
 
     class Meta:
         db_table = 'propiedad'
+        constraints = [models.UniqueConstraint(fields=['direccion', 'id_ciudad_propiedad'], name='Unica_Direccion')]
         verbose_name_plural="Lista de Propiedades"
 
     def __str__(self):
@@ -191,6 +192,8 @@ class Cita(models.Model):
 
     class Meta:
         db_table = 'cita'
+        constraints = [models.UniqueConstraint(fields=['f_cita', 'h_cita', 'ai_atiende_cita'], name='Agente_Horario')]
+        constraints = [models.UniqueConstraint(fields=['propiedad_involucrada', 'client_solicita_cita'], name='Propiedad_Cliente')]
         verbose_name_plural="Listado de Citas"
     def __str__(self):
         return  f"Cita N°: {self.nro_cita}"
