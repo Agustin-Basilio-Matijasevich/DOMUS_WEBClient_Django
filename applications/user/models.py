@@ -27,7 +27,7 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     )
     username = models.CharField(max_length=20, unique=True)
     dni_cuil = models.CharField(max_length=20)  # Field name made lowercase.
-    email = models.CharField(max_length=50, null=True, blank=True)
+    email = models.CharField(max_length=50, null=True)
     nombres = models.CharField(max_length=50)  # Field name made lowercase.
     apellidos = models.CharField(max_length=50, null=True)  # Field name made lowercase.
     sexo = models.CharField(choices=SEXO, max_length=10, default='NE')  # Field name made lowercase.
@@ -164,11 +164,11 @@ class Cita(models.Model):
     h_creacion_cita = models.TimeField(db_column='H_Creacion_Cita', auto_now_add=True)  #Hora en la que se crea la cita, independientemente del tipo de cita que sea.
     f_asignacion_cita = models.DateField(db_column='F_Asignacion_Cita', blank=True, null=True)  # Field name made lowercase.
     h_asignacion_cita = models.TimeField(db_column='H_Asignacion_Cita', blank=True, null=True)  # Field name made lowercase.
-    f_cita = models.DateField(db_column='F_Cita',verbose_name='Fecha', blank=True, null=True)  # Field name made lowercase.
-    h_cita = models.TimeField(db_column='H_Cita',verbose_name='Hora', blank=True, null=True)  # Field name made lowercase.
+    f_cita = models.DateField(db_column='F_Cita',verbose_name='Fecha', null=True)  # Field name made lowercase.
+    h_cita = models.TimeField(db_column='H_Cita',verbose_name='Hora', null=True)  # Field name made lowercase.
     f_concluye_cita = models.DateField(db_column='F_Concluye_Cita', blank=True, null=True)  # Field name made lowercase.
     h_concluye_cita = models.TimeField(db_column='H_Concluye_Cita', blank=True, null=True)  # Field name made lowercase.
-    secre_asigna_cita = models.ForeignKey(Usuario,verbose_name="Secretaria a cargo", db_column='Secre_Asigna_Cita', blank=True, null=True, on_delete=models.RESTRICT, related_name='secre_cita')  #Secretaria quien realiza la cita.
+    secre_asigna_cita = models.ForeignKey(Usuario,verbose_name="Secretaria a cargo", db_column='Secre_Asigna_Cita', blank=True, null=True, on_delete=models.RESTRICT, related_name='secre_cita',limit_choices_to={'tipo_usuario':'ES'})  #Secretaria quien realiza la cita.
     ai_atiende_cita = models.ForeignKey(Usuario,verbose_name="Agente inmobiliario asignado", db_column='AI_Atiende_Cita', blank=True, null=True, on_delete=models.RESTRICT, related_name='ai_cita', limit_choices_to={'tipo_usuario':'EAI'})  #Agente, quien esta cargo esa cita.
     client_solicita_cita = models.ForeignKey(Usuario,verbose_name="Cliente quien solicita", db_column='Client_Solicita_Cita', on_delete=models.RESTRICT, limit_choices_to=Q(tipo_usuario='CP') | Q(tipo_usuario='CC')) #Cliente quien solicita la cita.
     propiedad_involucrada = models.ForeignKey(Propiedad,verbose_name="Codigo de propiedad", db_column='Propiedad_Involucrada', on_delete=models.CASCADE)  #Propiedad

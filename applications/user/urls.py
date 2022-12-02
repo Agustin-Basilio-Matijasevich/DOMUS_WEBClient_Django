@@ -57,4 +57,14 @@ urlpatterns = [
         views.agenda,
         name= 'agenda'
     ),
+    path(
+        'agendaInmobiliaria/',
+        views.citasDisponiblesInmobiliaria,
+        name= 'agendaInmobiliaria'
+    ),
+    path(
+        'buscarCitaInmobiliaria/',
+        views.filtrarCitasInmobiliaria,
+        name= 'filtrarCitasInmobiliaria'
+    ),
 ]

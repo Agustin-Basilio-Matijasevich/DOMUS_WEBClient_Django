@@ -36,6 +36,9 @@ class CerrarSesionView(View):
             reverse('login')
         )
 
+
+#Funcionalidad para el rol de Secretario. DOMUS 2.0
+
 #Vista que se encarga de listar todas aquellas vistas las cuales se categorizan por ser de 'solicitud'
 def CitaList(request):
     citas = Cita.objects.filter(tipo_cita='SOL')
@@ -139,11 +142,44 @@ def agenda(request):
         }
         return render(request, 'agenda.html', data)
         
-    
 
 
+#Funcionalidad para el rol de Agente inmobiliario:
 
+class HomeInmobiliaria(TemplateView):
+    template_name = 'agenteinmobiliario/agenda.html'
 
+#Filtramos todas las citas disponibles para ese agente.
+def citasDisponiblesInmobiliaria(request):
+    if request.method == 'GET':
+        citas = Cita.objects.filter(
+        tipo_cita='AG',
+        f_concluye_cita = None,
+        h_concluye_cita= None,
+        ai_atiende_cita= request.user,
+        )
+
+        data = {
+            'citas': citas
+        }
+    return render(request, 'agenteInmobiliario/agenda.html', data)
+
+#Filtramos por fecha, todas aquellas citas que coincidan
+def filtrarCitasInmobiliaria(request):
+    if request.method == 'GET':
+        citas = Cita.objects.filter(
+        tipo_cita='AG',
+        f_concluye_cita = None,
+        h_concluye_cita= None,
+        ai_atiende_cita= request.user,
+        f_cita = request.GET['date'],
+        )
+        
+        data = {
+            'citas': citas
+        }
+
+    return render(request, 'agenteInmobiliario/agenda.html', data)
 
     
 
