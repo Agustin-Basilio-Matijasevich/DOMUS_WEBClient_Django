@@ -134,6 +134,21 @@ class Propiedad(models.Model):
     def __str__(self):
         return f"COD PROP N°: {self.id_propiedad}"
 
+    def CodProp(self):
+        return f"COD PROP N°: {self.id_propiedad}"
+
+    def Dueño(self):
+        return f"{self.id_dueño.nombres} {self.id_dueño.apellidos}"
+
+    def is_Disponible(self):
+        if (self.id_adquiere_o_alquila is None):
+            return True
+            
+        return False
+
+    def Ubicacion(self):
+        return f"{self.id_ciudad_propiedad.nombre_ciudad}, {self.id_ciudad_propiedad.id_provincia_ciudad.nombre_provincia}, {self.id_ciudad_propiedad.id_provincia_ciudad.nombre_pais_provincia.nombre_pais}"
+
 class PropiedadRutaDocumento(models.Model):
     id_propiedad_ruta_documento = models.AutoField(db_column='ID_Propiedad_Ruta_Documento', primary_key=True)
     id_propiedad_documento = models.ForeignKey(Propiedad, db_column='ID_Propiedad_Documento', on_delete=models.CASCADE)  # Field name made lowercase.
