@@ -22,9 +22,15 @@ class UserAdmin(admin.ModelAdmin):
             obj.set_password(obj.password) 
         super().save_model(request, obj, form, change)
 
+class PropiedadAdmin(admin.ModelAdmin):
+    list_display = (Propiedad.CodProp, 'tipo_propiedad', 'estado_propiedad', 'direccion', 'precio_sugerido', Propiedad.Dueño, Propiedad.Ubicacion, Propiedad.is_Disponible)
+    search_fields = ('direccion', Propiedad.Ubicacion, Propiedad.Dueño)
+    list_filter = ('tipo_propiedad', 'estado_propiedad')
+    ordering = ('tipo_propiedad', 'estado_propiedad')
+
 admin.site.register(Usuario, UserAdmin)
 admin.site.register(Cita)
-admin.site.register(Propiedad)
+admin.site.register(Propiedad, PropiedadAdmin)
 admin.site.register(Ciudad)
 admin.site.register(Provincia)
 admin.site.register(Pais)
