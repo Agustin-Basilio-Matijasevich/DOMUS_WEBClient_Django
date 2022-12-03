@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Usuario, Cita, Propiedad, Ciudad, Provincia, Pais
+from .models import Usuario, Cita, Propiedad, Ciudad, Provincia, Pais, PropiedadRutaDocumento
 
 admin.site.site_header = 'DOMUS 2.0 Alpha'
 
@@ -31,6 +31,7 @@ class PropiedadAdmin(admin.ModelAdmin):
 admin.site.register(Usuario, UserAdmin)
 admin.site.register(Cita)
 admin.site.register(Propiedad, PropiedadAdmin)
+admin.site.register(PropiedadRutaDocumento)
 admin.site.register(Ciudad)
 admin.site.register(Provincia)
 admin.site.register(Pais)

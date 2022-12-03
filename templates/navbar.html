@@ -43,9 +43,9 @@
                           <a class="nav-link active text-light" aria-current="page" href="{% url 'home' %}">Home</a>
                       </li>
                       <li class="nav-item">
-                          <a class="nav-link  text-light" href="#">Agenda</a>
+                          <a class="nav-link  text-light" href="{% url 'agendaInmobiliaria' %}">Agenda</a>
                       </li>
-                          <a class="btn btn-success text-light">Catalogo Propiedades</a>
+                          <a class="btn btn-success text-light" href="{% url 'catalogoPropiedades' %}">Catalogo Propiedades</a>
                   </ul>
                       <img src="{% static 'img/agente.png' %}" width="30" height="24">
                     </a>

@@ -74,6 +74,37 @@ class CitaForm(forms.Form):
             raise forms.ValidationError("No existe ningun agente inmboliario con ese nombre.")
         return agenteForm
 
+
+class CitaAtendidaForm(forms.ModelForm):
+    f_concluye_cita = forms.DateField(
+        label='Fecha',
+        widget=forms.DateInput(
+            format='%Y-%m-%d',
+            attrs={
+                "type": "date",
+                "required": "true",
+                "min": datetime.datetime.now().strftime('%Y-%m-%d'),
+            }),
+            input_formats=('%Y-%m-%d',),
+    )
+    h = forms.TimeField(
+        label='Hora',
+        widget=forms.TimeInput(
+            format='%H:%M',
+            attrs={
+                'type': 'time',
+                'required': 'true'
+            }),
+            input_formats=('%H:%M',),
+    )
+    class Meta:
+        model= Cita
+        fields = (
+            'f_concluye_cita',
+            'h_concluye_cita',
+        )
+
+
 class CitaUpdateForm(forms.ModelForm):
     f_cita = forms.DateField(
         label='Fecha',

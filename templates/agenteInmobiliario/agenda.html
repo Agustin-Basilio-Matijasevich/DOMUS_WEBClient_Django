@@ -63,7 +63,13 @@
                             <td>{{ cita.client_solicita_cita.email }}</td>
                             
                             <td>
-                                <a class="btn btn-info" href="{% url 'modificarCitaAgendada' cita.nro_cita %}">Atender cita</a>
+                                <form action="{% url 'atenderCitaAgendada' cita.nro_cita %}" method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" value="{{ cita.f_cita }}" name="f_concluye_cita">
+                                    <input type="hidden" value="{{ cita.H_cita }}" name="H_concluye_cita">
+                                    <input type="submit" class="btn btn-info" value="Atender cita">
+                                </form>
+                                
                             </td>
                         </tr>
                     {% endfor %}

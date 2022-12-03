@@ -2,15 +2,15 @@ import datetime
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import TemplateView, ListView, CreateView, View
 from django.views.generic.edit import FormView
-from .forms import LoginUsuarioForm, CitaUpdateForm, CitaForm
+from .forms import LoginUsuarioForm, CitaUpdateForm, CitaAtendidaForm
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-from .models import Cita, Usuario, Propiedad
-
-
+from .models import Cita, Usuario, Propiedad, PropiedadRutaDocumento
+from django.core.paginator import Paginator
+from django.http import Http404
 class HomeView(LoginRequiredMixin, TemplateView):
     template_name = 'home.html'
     login_url= reverse_lazy('login')
@@ -57,6 +57,8 @@ def agregarCita(request):
         
         formulario = CitaUpdateForm(data=request.POST, files=request.FILES)
         if formulario.is_valid():
+            formulario.f_creacion_cita= datetime.date.today()
+            formulario.h_creacion_cita= datetime.datetime.now().strftime('%H:%M')
             formulario.save()
             messages.success(request, 'Cita agendada con exito')
             return redirect(to='solicitudCita')
@@ -181,6 +183,24 @@ def filtrarCitasInmobiliaria(request):
 
     return render(request, 'agenteInmobiliario/agenda.html', data)
 
-    
+def atenderCitaAgendada(request, nro_cita):
+    cita = get_object_or_404(Cita, nro_cita=nro_cita)
 
-    
+    cita.f_concluye_cita= datetime.date.today()
+    cita.h_concluye_cita= datetime.datetime.now().strftime('%H:%M')
+    cita.save()
+
+    messages.success(request, 'Cita atendida con exito')
+        
+    return render(request, 'agenteInmobiliario/agenda.html')
+
+
+class CatalogoPropiedadesAgente(ListView):
+    template_name = 'agenteInmobiliario/propiedades.html'
+    queryset = PropiedadRutaDocumento.objects.all()
+    context_object_name = 'propiedades'
+    paginate_by = 5
+
+
+
+        

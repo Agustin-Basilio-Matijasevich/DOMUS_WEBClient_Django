@@ -153,12 +153,14 @@ class Propiedad(models.Model):
 class PropiedadRutaDocumento(models.Model):
     id_propiedad_ruta_documento = models.AutoField(db_column='ID_Propiedad_Ruta_Documento', primary_key=True)
     id_propiedad_documento = models.ForeignKey(Propiedad, db_column='ID_Propiedad_Documento', on_delete=models.CASCADE)  # Field name made lowercase.
-    ruta_pd = models.CharField(db_column='Ruta_PD', max_length=100)  # Field name made lowercase.
+    ruta_pd = models.ImageField(upload_to ='propiedad/',db_column='Ruta_PD', max_length=100)  # Field name made lowercase.
 
     class Meta:
         db_table = 'propiedad_ruta_documento'
         constraints = [models.UniqueConstraint(fields=['id_propiedad_documento', 'ruta_pd'], name='PropiedadRutaDocumento_pk')]
 
+    def __str__(self):
+        return f"Propiedad - Foto"
 
 class PropiedadRutaImagen(models.Model):
     id_propiedad_ruta_imagen = models.AutoField(db_column='ID_Propiedad_Ruta_Imagen', primary_key=True)
@@ -193,7 +195,6 @@ class Cita(models.Model):
     class Meta:
         db_table = 'cita'
         constraints = [models.UniqueConstraint(fields=['f_cita', 'h_cita', 'ai_atiende_cita'], name='Agente_Horario')]
-        constraints = [models.UniqueConstraint(fields=['propiedad_involucrada', 'client_solicita_cita'], name='Propiedad_Cliente')]
         verbose_name_plural="Listado de Citas"
     def __str__(self):
         return  f"Cita N°: {self.nro_cita}"

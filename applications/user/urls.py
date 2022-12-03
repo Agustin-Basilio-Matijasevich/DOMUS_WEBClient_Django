@@ -67,4 +67,14 @@ urlpatterns = [
         views.filtrarCitasInmobiliaria,
         name= 'filtrarCitasInmobiliaria'
     ),
+    path(
+        'atenderCitaAgendada/<nro_cita>/',
+        views.atenderCitaAgendada,
+        name= 'atenderCitaAgendada'
+    ),
+    path(
+        'catalogoPropiedades/',
+        views.CatalogoPropiedadesAgente.as_view(),
+        name= 'catalogoPropiedades'
+    ),
 ]
