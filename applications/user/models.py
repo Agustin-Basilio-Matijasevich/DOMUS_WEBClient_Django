@@ -194,7 +194,6 @@ class Cita(models.Model):
 
     class Meta:
         db_table = 'cita'
-        constraints = [models.UniqueConstraint(fields=['f_cita', 'h_cita', 'ai_atiende_cita'], name='Agente_Horario')]
         verbose_name_plural="Listado de Citas"
     def __str__(self):
         return  f"Cita N°: {self.nro_cita}"
