@@ -55,7 +55,7 @@ urlpatterns = [
     path(
         'agenda/',
         views.agenda,
-        name= 'agenda'
+        name= 'agendaSecretario'
     ),
     path(
         'agendaInmobiliaria/',

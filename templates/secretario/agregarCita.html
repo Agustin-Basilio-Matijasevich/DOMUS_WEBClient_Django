@@ -1,10 +1,9 @@
 {% extends 'base.html' %}
 
-
 {% block tittle %}
-    Agregar nueva Cita
+    Agregar nueva Cita - Domus 2.0
 {% endblock tittle %}
-    
+
 {% block content %}
 {% load crispy_forms_tags %}
 
@@ -18,7 +17,7 @@
                 <input type="text" value="{{ user.nombres }}" disabled name="secretario">
                 <br>
                 <label>2. Rellene los siguientes datos:</label>
-                    
+
                 {{ form | crispy }}
 
                 <div class="d-flex justify-content-end">
@@ -30,6 +29,5 @@
 
         </div>
     </div>
-</div>        
+</div>
 {% endblock content %}
-    

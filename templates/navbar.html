@@ -17,11 +17,11 @@
                 </li>
                 <li>
                   <div class="btn-group">
-                    <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                       Agenda
                     </button>
                     <ul class="dropdown-menu">
-                      <li><a class="dropdown-item" href="{% url 'agenda' %}">Ver Agenda</a></li>
+                      <li><a class="dropdown-item" href="{% url 'agendaSecretario' %}">Ver Agenda</a></li>
                       <li><a class="dropdown-item" href="{% url 'agendarCita' %}">Agendar nueva cita</a></li>
                     </ul>
                   </div>
@@ -30,7 +30,7 @@
               <a class="navbar-brand" href="#">
                 <img src="{% static 'img/secretario.png' %}" width="30" height="24">
               </a>
-              <a class="navbar-brand">{{ user.username }}</a>
+              <a class="navbar-brand text-light">{{ user.nombres }}</a>
               <a class="btn btn-danger" href="{% url 'logout' %}">Salir</a></button>
               {% elif user.tipo_usuario == 'EAI' %}
                 <a class="navbar-brand text-light">Agente Inmobiliario > </a>
@@ -45,16 +45,16 @@
                       <li class="nav-item">
                           <a class="nav-link  text-light" href="{% url 'agendaInmobiliaria' %}">Agenda</a>
                       </li>
-                          <a class="btn btn-success text-light" href="{% url 'catalogoPropiedades' %}">Catalogo Propiedades</a>
+                          <a class="nav-link text-light" href="{% url 'catalogoPropiedades' %}">Propiedades</a>
                   </ul>
                       <img src="{% static 'img/agente.png' %}" width="30" height="24">
                     </a>
-                    <a class="navbar-brand">{{ user.username }}</a>
+                    <a class="navbar-brand text-light">{{ user.nombres }}</a>
                     <a class="text-start btn btn-danger" href="{% url 'logout' %}">Salir</a>
                 </div>
               {% endif %}
         </div>
-      
+
     </div>
   </nav>
-{% endif %}  
+{% endif %}

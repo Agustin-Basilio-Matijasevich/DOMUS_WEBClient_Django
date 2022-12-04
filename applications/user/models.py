@@ -34,17 +34,17 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     salario_mensual = models.DecimalField(max_digits=10, decimal_places=0, null=True, blank=True)  # Field name made lowercase.
     departamento = models.CharField(choices=DEPARTAMENTO, max_length=16, null=True, blank=True)  # Field name made lowercase.
     foto_perfil = models.TextField(blank=True, null=True)  # Field name made lowercase.
-    tipo_usuario = models.CharField(choices=TIPO_USUARIO, max_length=10)  # Field name made lowercase.    
+    tipo_usuario = models.CharField(choices=TIPO_USUARIO, max_length=10)  # Field name made lowercase.
     is_staff= models.BooleanField(default=False)
     objects = ManagerUsuario()
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['dni_cuil','nombres','apellidos','tipo_usuario',]
-    
+
     class Meta:
         db_table = 'usuario'
         verbose_name_plural="Listado de Usuarios"
-    
+
     def __str__(self):
         return f"{self.nombres} {self.apellidos}"
 class Idioma(models.Model):
@@ -52,16 +52,16 @@ class Idioma(models.Model):
 
     class Meta:
         db_table = 'idioma'
-        
-        
+
+
 class Pais(models.Model):
     nombre_pais = models.CharField(db_column='Nombre_Pais', primary_key=True, max_length=20)  # Field name made lowercase.
 
     class Meta:
         db_table = 'pais'
         verbose_name_plural="Paises"
-        
-        
+
+
 class PaisHablaIdioma(models.Model):
     id_paishablaidioma = models.AutoField(db_column='ID_Pais_Habla_Idioma', primary_key=True)
     nombre_idioma_idioma = models.ForeignKey(Idioma, db_column='Nombre_Idioma_Idioma', on_delete=models.RESTRICT)  # Field name made lowercase.
@@ -70,8 +70,8 @@ class PaisHablaIdioma(models.Model):
     class Meta:
         db_table = 'pais_habla_idioma'
         constraints = [models.UniqueConstraint(fields=['nombre_idioma_idioma', 'nombre_pais_pais'], name='PaisHablaIdioma_pk')]
-        
-        
+
+
 class Provincia(models.Model):
     id_provincia = models.AutoField(db_column='ID_Provincia', primary_key=True)
     nombre_provincia = models.CharField(db_column='Nombre_Provincia', max_length=20)  # Field name made lowercase.
@@ -81,8 +81,8 @@ class Provincia(models.Model):
         db_table = 'provincia'
         verbose_name_plural="Provincias"
         constraints = [models.UniqueConstraint(fields=['nombre_provincia', 'nombre_pais_provincia'], name='Provincia_pk')]
-        
-        
+
+
 class Ciudad(models.Model):
     id_ciudad = models.AutoField(db_column='ID_Ciudad', primary_key=True)
     nombre_ciudad = models.CharField(db_column='Nombre_Ciudad', max_length=20)  # Field name made lowercase.
@@ -92,8 +92,8 @@ class Ciudad(models.Model):
         db_table = 'ciudad'
         verbose_name_plural="Ciudades"
         constraints = [models.UniqueConstraint(fields=['nombre_ciudad', 'id_provincia_ciudad'], name='Ciudad_pk')]
-        
-        
+
+
 class AiAtiendeCiudad(models.Model):
     id_ai_atiende_ciudad = models.AutoField(db_column='ID_AI_Atiende_Ciudad', primary_key=True)
     id_ciudad_ai_atiende_ciudad = models.ForeignKey(Ciudad, db_column='ID_Ciudad_AIatiendeCiudad', on_delete=models.RESTRICT)  # Field name made lowercase.
@@ -102,8 +102,8 @@ class AiAtiendeCiudad(models.Model):
     class Meta:
         db_table = 'ai_atiende_ciudad'
         constraints = [models.UniqueConstraint(fields=['id_ciudad_ai_atiende_ciudad', 'id_ai'], name='AIAtiendeCiudad_pk')]
-        
-        
+
+
 class Propiedad(models.Model):
     TIPO_PROPIEDAD = (
         	('CAS', 'Casa'),
@@ -130,7 +130,7 @@ class Propiedad(models.Model):
     class Meta:
         db_table = 'propiedad'
         constraints = [models.UniqueConstraint(fields=['direccion', 'id_ciudad_propiedad'], name='Unica_Direccion')]
-        verbose_name_plural="Lista de Propiedades"
+        verbose_name_plural="Detalle de las Propiedades"
 
     def __str__(self):
         return f"COD PROP N°: {self.id_propiedad}"
@@ -144,7 +144,7 @@ class Propiedad(models.Model):
     def is_Disponible(self):
         if (self.id_adquiere_o_alquila is None):
             return True
-            
+
         return False
 
     def Ubicacion(self):
@@ -156,11 +156,13 @@ class PropiedadRutaDocumento(models.Model):
     ruta_pd = models.ImageField(upload_to ='propiedad/',db_column='Ruta_PD', max_length=100)  # Field name made lowercase.
 
     class Meta:
+        verbose_name_plural = "Listado de Propiedades"
+        verbose_name = "Listado de Propiedades"
         db_table = 'propiedad_ruta_documento'
         constraints = [models.UniqueConstraint(fields=['id_propiedad_documento', 'ruta_pd'], name='PropiedadRutaDocumento_pk')]
 
     def __str__(self):
-        return f"Propiedad - Foto"
+        return f"Propiedad N°{self.id_propiedad_ruta_documento}"
 
 class PropiedadRutaImagen(models.Model):
     id_propiedad_ruta_imagen = models.AutoField(db_column='ID_Propiedad_Ruta_Imagen', primary_key=True)
@@ -307,8 +309,8 @@ class DeudaCliente(models.Model):
 
     class Meta:
         db_table = 'deuda_cliente'
-        
-        
+
+
 class CobroPendCliente(models.Model):
     nro_cobro_p_cliente = models.AutoField(db_column='NRO_Cobro_P_Cliente', primary_key=True)  # Field name made lowercase.
     f_creacion_cobro_pc = models.DateField(db_column='F_Creacion_Cobro_PC')  # Field name made lowercase.

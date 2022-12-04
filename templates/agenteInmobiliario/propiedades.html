@@ -7,7 +7,8 @@
 
 {% block content %}
 {% if propiedades %}
-    <h1>Catalogo</h1> 
+  <h1>Catalogo</h1>
+
     <div class="card">
         <div class="d-flex flex-wrap justify-content-center">
             {% for p in propiedades %}
@@ -20,9 +21,9 @@
                     <a>Estado de Propiedad: {{ p.id_propiedad_documento.get_estado_propiedad_display }}</a><br>
                     <a>Dueño de Propiedad: {{ p.id_propiedad_documento.id_dueño}} </a><br>
                     <p>Metros Cuadrados: {{ p.id_propiedad_documento.metros_cuadrados }}</p>
-                    
+
                     <h4>${{ p.id_propiedad_documento.precio_sugerido }}</h6>
-                    
+
                     {% if p.id_propiedad_documento.id_adquiere_o_alquila is None %}
                     <a class="btn btn-primary">Disponible</a>
                     {% else %}
@@ -31,11 +32,12 @@
                 </div>
             </div>
             {% endfor %}
-        </div> 
+        </div>
     </div>
-    {% include 'paginator.html' %} 
+    {% include 'paginator.html' %}
+{% else %}
+<h3 class="text text-center p-2">No existen catalogos de propiedades actualmente.</h3>
+
 {% endif %}
 
 {% endblock content %}
-    
-    

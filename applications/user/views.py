@@ -11,6 +11,8 @@ from django.contrib import messages
 from .models import Cita, Usuario, Propiedad, PropiedadRutaDocumento
 from django.core.paginator import Paginator
 from django.http import Http404
+
+
 class HomeView(LoginRequiredMixin, TemplateView):
     template_name = 'home.html'
     login_url= reverse_lazy('login')
@@ -45,16 +47,16 @@ def CitaList(request):
     data = {
         'citas': citas
     }
-    return render(request, 'SolicitudCita.html', data)
+    return render(request, 'secretario/solicitudCita.html', data)
 
 #Vista encargada de agregar una nueva cita.(Ya sea de solicitud o agendada)
 def agregarCita(request):
     data = {
             'form': CitaUpdateForm()
         }
-    
+
     if request.method=='POST':
-        
+
         formulario = CitaUpdateForm(data=request.POST, files=request.FILES)
         if formulario.is_valid():
             formulario.f_creacion_cita= datetime.date.today()
@@ -65,8 +67,8 @@ def agregarCita(request):
         else:
             data["form"] = formulario
             messages.error(request,"Error al crear cita.")
-    
-    return render(request,'agregarCita.html', data)
+
+    return render(request,'secretario/agregarCita.html', data)
 
 #Vista encargada de modificar una solicitud de cita.
 def modificarCitaSolicitud(request, nro_cita):
@@ -79,10 +81,10 @@ def modificarCitaSolicitud(request, nro_cita):
         formulario = CitaUpdateForm(data=request.POST, instance=cita, files=request.FILES)
         if formulario.is_valid():
             formulario.save()
-            messages.success(request, 'Cita modificada con exito')
+            messages.success(request, 'Cita agendada con exito')
             return redirect(to='solicitudCita')
         data['form'] = formulario
-    return render(request, 'editarCitaSolicitud.html', data)
+    return render(request, 'secretario/editarCitaSolicitud.html', data)
 
 #Vista que se encarga de modificar una cita que ya fue agendadas
 def modificarCitaAgendada(request, nro_cita):
@@ -96,10 +98,10 @@ def modificarCitaAgendada(request, nro_cita):
         if formulario.is_valid():
             formulario.save()
             messages.success(request, 'Cita modificada con exito')
-            return redirect(to='agenda')
+            return redirect(to='agendaSecretario')
         data['form'] = formulario
 
-    return render(request, 'editarCitaAgendada.html', data)
+    return render(request, 'secretario/editarCitaAgendada.html', data)
 
 #Vista encargada de eliminar una solicitud de cita. Retorna a la lista de solicitudes.
 def eliminarCitaSolicitud(request, nro_cita):
@@ -116,7 +118,7 @@ def eliminarCitaAgendada(request, nro_cita):
     cita.delete()
     messages.success(request, 'Solicitud de cita eliminada con exito')
     return HttpResponseRedirect(
-            reverse('agenda')
+            reverse('agendaSecretario')
         )
 
 #Vista que busca todas aquellas citas que cumpla con la fecha que recibimos por GET.
@@ -131,19 +133,19 @@ def buscarFecha(request):
         else:
             messages.error(request,"No se encontraron citas para la fecha indicada.")
 
-        return render(request, 'agenda.html', data)
+        return render(request, 'secretario/agenda.html', data)
 
 #Vista que carga todas aquellas citas las cuales fueron agendadas.
 def agenda(request):
     if request.method=='GET':
         citas = Cita.objects.filter(tipo_cita='AG')
-        
+
         data = {
             'citas': citas,
             'datetime': datetime.datetime.now()
         }
-        return render(request, 'agenda.html', data)
-        
+        return render(request, 'secretario/agenda.html', data)
+
 
 
 #Funcionalidad para el rol de Agente inmobiliario:
@@ -176,7 +178,7 @@ def filtrarCitasInmobiliaria(request):
         ai_atiende_cita= request.user,
         f_cita = request.GET['date'],
         )
-        
+
         data = {
             'citas': citas
         }
@@ -191,7 +193,7 @@ def atenderCitaAgendada(request, nro_cita):
     cita.save()
 
     messages.success(request, 'Cita atendida con exito')
-        
+
     return render(request, 'agenteInmobiliario/agenda.html')
 
 
@@ -200,7 +202,3 @@ class CatalogoPropiedadesAgente(ListView):
     queryset = PropiedadRutaDocumento.objects.all()
     context_object_name = 'propiedades'
     paginate_by = 5
-
-
-
-        

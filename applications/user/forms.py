@@ -3,6 +3,7 @@ from django import forms
 from django.contrib.auth import authenticate
 from .models import Cita,Usuario
 from django.contrib.admin.widgets import AdminDateWidget, AdminTimeWidget
+from django.contrib import messages
 
 TIPO_CITA = (
         	('SOL', 'Solicitud'),
@@ -30,15 +31,15 @@ class LoginUsuarioForm(forms.Form):
             }
         )
     )
-    
+
     def clean(self):
         cleaned_data = super(LoginUsuarioForm, self).clean()
         username = self.cleaned_data['username']
         password = self.cleaned_data['password']
-        
+
         if not authenticate(username=username, password=password):
-            raise forms.ValidationError('Los datos del usuario no son correctos.')
-    
+            raise forms.ValidationError("Usuario y/o contraseña incorrecta.")
+
         return self.cleaned_data
 
 class DateInput(forms.DateInput):
@@ -127,7 +128,7 @@ class CitaUpdateForm(forms.ModelForm):
             }),
             input_formats=('%H:%M',),
     )
-    
+
     class Meta:
         model = Cita
         fields = (
@@ -138,11 +139,3 @@ class CitaUpdateForm(forms.ModelForm):
             'propiedad_involucrada',
             'tipo_cita',
         )
-    
-
-
-        
-        
-
-
-
