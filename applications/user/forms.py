@@ -64,8 +64,14 @@ class CitaAgendadaForm(forms.ModelForm):
             }),
             input_formats=('%H:%M',),
     )
+    def clean_ai_atiende_cita(self):
+        data = self.cleaned_data['ai_atiende_cita']
+        if data is not None:
+            return data
+        else:
+            raise forms.ValidationError("Las citas agendadas deben tener un agente a cargo.")
 
-    class Meta:
+    class Meta:     
         model = Cita
         fields = (
             'client_solicita_cita',
@@ -74,6 +80,7 @@ class CitaAgendadaForm(forms.ModelForm):
             'ai_atiende_cita',
             'propiedad_involucrada',
         )
+
 
 class CitaSolicitudForm(forms.ModelForm):
     f_cita = forms.DateField(
