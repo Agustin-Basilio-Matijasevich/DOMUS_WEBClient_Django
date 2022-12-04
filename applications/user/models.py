@@ -2,9 +2,24 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from .managers import ManagerUsuario
 from django.db.models import Q
+import os
+from datetime import date
+import datetime
+from django.utils import timezone
+from uuid import uuid4
 
-# Create your models here
 class Usuario(AbstractBaseUser, PermissionsMixin):
+    def generateRutaUsuarios(instance, filename):
+        #Extraemos la extension de la imagen guardada: *.jpg|*.png, etc.
+        extensionImagen = os.path.splitext(filename)[1][1:]
+        #Generacion de ruta relativa a MEDIA_ROOT: Propiedades/yyyy-mm/
+        rutaImagen = os.path.join('Usuarios', date.today().strftime("%Y-%m"))
+        #Generamos un nombre para el archivo(random), junto con la extension: "342ewrw2342.jpg"(ejemplo)
+        nombre_archivo = '{}.{}'.format(uuid4().hex, extensionImagen)
+        
+        #Unimos con os.path, la MEDIA_ROOT, junto con el archivo: Propiedades/yyyy-mm/342ewrw2342.jpg (ejemplo)
+        return os.path.join(rutaImagen, nombre_archivo)
+    
     SEXO = (
         ('M', 'Masculino'),
         ('F', 'Femenino'),
@@ -33,7 +48,7 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     sexo = models.CharField(choices=SEXO, max_length=10, default='NE')  # Field name made lowercase.
     salario_mensual = models.DecimalField(max_digits=10, decimal_places=0, null=True, blank=True)  # Field name made lowercase.
     departamento = models.CharField(choices=DEPARTAMENTO, max_length=16, null=True, blank=True)  # Field name made lowercase.
-    foto_perfil = models.TextField(blank=True, null=True)  # Field name made lowercase.
+    foto_perfil = models.ImageField(upload_to=generateRutaUsuarios, max_length=100)  # Field name made lowercase.
     tipo_usuario = models.CharField(choices=TIPO_USUARIO, max_length=10)  # Field name made lowercase.
     is_staff= models.BooleanField(default=False)
     objects = ManagerUsuario()
@@ -43,10 +58,12 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
 
     class Meta:
         db_table = 'usuario'
+        verbose_name = "Usuario"
         verbose_name_plural="Listado de Usuarios"
 
     def __str__(self):
         return f"{self.nombres} {self.apellidos}"
+
 class Idioma(models.Model):
     nombre_idioma = models.CharField(db_column='Nombre_Idioma', primary_key=True, max_length=20)  # Field name made lowercase.
 
@@ -59,9 +76,12 @@ class Pais(models.Model):
 
     class Meta:
         db_table = 'pais'
-        verbose_name_plural="Paises"
+        verbose_name = "Pais"
+        verbose_name_plural="Listado de Paises"
 
-
+    def __str__(self):
+        return self.nombre_pais
+    
 class PaisHablaIdioma(models.Model):
     id_paishablaidioma = models.AutoField(db_column='ID_Pais_Habla_Idioma', primary_key=True)
     nombre_idioma_idioma = models.ForeignKey(Idioma, db_column='Nombre_Idioma_Idioma', on_delete=models.RESTRICT)  # Field name made lowercase.
@@ -79,9 +99,12 @@ class Provincia(models.Model):
 
     class Meta:
         db_table = 'provincia'
-        verbose_name_plural="Provincias"
+        verbose_name = "Provincia"
+        verbose_name_plural="Listado de Provincias"
         constraints = [models.UniqueConstraint(fields=['nombre_provincia', 'nombre_pais_provincia'], name='Provincia_pk')]
 
+    def __str__(self):
+        return self.nombre_provincia
 
 class Ciudad(models.Model):
     id_ciudad = models.AutoField(db_column='ID_Ciudad', primary_key=True)
@@ -90,10 +113,13 @@ class Ciudad(models.Model):
 
     class Meta:
         db_table = 'ciudad'
-        verbose_name_plural="Ciudades"
+        verbose_name = "Ciudad"
+        verbose_name_plural="Listado de Ciudades"
         constraints = [models.UniqueConstraint(fields=['nombre_ciudad', 'id_provincia_ciudad'], name='Ciudad_pk')]
 
-
+    def __str__(self):
+        return self.nombre_ciudad
+    
 class AiAtiendeCiudad(models.Model):
     id_ai_atiende_ciudad = models.AutoField(db_column='ID_AI_Atiende_Ciudad', primary_key=True)
     id_ciudad_ai_atiende_ciudad = models.ForeignKey(Ciudad, db_column='ID_Ciudad_AIatiendeCiudad', on_delete=models.RESTRICT)  # Field name made lowercase.
@@ -117,8 +143,8 @@ class Propiedad(models.Model):
         ('ALQ','Alquiler'),
     )
     id_propiedad = models.AutoField(db_column='ID_Propiedad',verbose_name="Codigo Propiedad", primary_key=True)  # Field name made lowercase.
-    id_dueño = models.ForeignKey(Usuario,verbose_name="Dueño a cargo",db_column='ID_Dueño', on_delete=models.RESTRICT, related_name='dueño_propiedad')  # Field name made lowercase.
-    id_adquiere_o_alquila = models.ForeignKey(Usuario, db_column='ID_Adquiere_o_Alquila', blank=True, null=True, on_delete=models.RESTRICT)  # Field name made lowercase.
+    id_dueño = models.ForeignKey(Usuario,verbose_name="Dueño a cargo",db_column='ID_Dueño', on_delete=models.RESTRICT, related_name='dueño_propiedad', limit_choices_to=Q(tipo_usuario='CP') | Q(tipo_usuario='CC'))  # Field name made lowercase.
+    id_adquiere_o_alquila = models.ForeignKey(Usuario, db_column='ID_Adquiere_o_Alquila', blank=True, null=True, on_delete=models.RESTRICT,limit_choices_to=Q(tipo_usuario='CP') | Q(tipo_usuario='CC'), verbose_name="Dueño/Inquilino")  # Field name made lowercase.
     id_ciudad_propiedad = models.ForeignKey(Ciudad,verbose_name="Ciudad donde se encuentra", db_column='ID_Ciudad_Propiedad', on_delete=models.RESTRICT)  # Field name made lowercase.
     tipo_propiedad = models.CharField(choices=TIPO_PROPIEDAD,verbose_name="Propiedad de tipo", db_column='Tipo_Propiedad', max_length=12)  # Field name made lowercase.
     pisos = models.PositiveIntegerField(db_column='Pisos',verbose_name="Piso",)  # Field name made lowercase.
@@ -130,10 +156,11 @@ class Propiedad(models.Model):
     class Meta:
         db_table = 'propiedad'
         constraints = [models.UniqueConstraint(fields=['direccion', 'id_ciudad_propiedad'], name='Unica_Direccion')]
-        verbose_name_plural="Detalle de las Propiedades"
+        verbose_name = "Propiedad"
+        verbose_name_plural="Listado de Propiedades"
 
     def __str__(self):
-        return f"COD PROP N°: {self.id_propiedad}"
+        return f"Propiedad N°: {self.id_propiedad}"
 
     def CodProp(self):
         return f"COD PROP N°: {self.id_propiedad}"
@@ -150,19 +177,40 @@ class Propiedad(models.Model):
     def Ubicacion(self):
         return f"{self.id_ciudad_propiedad.nombre_ciudad}, {self.id_ciudad_propiedad.id_provincia_ciudad.nombre_provincia}, {self.id_ciudad_propiedad.id_provincia_ciudad.nombre_pais_provincia.nombre_pais}"
 
+
 class PropiedadRutaDocumento(models.Model):
+    def generateRutaPropiedad(instance, filename):
+        #Extraemos la extension de la imagen guardada: *.jpg|*.png, etc.
+        extensionImagen = os.path.splitext(filename)[1][1:]
+        #Generacion de ruta relativa a MEDIA_ROOT: Propiedades/yyyy-mm/
+        rutaImagen = os.path.join('Propiedades', date.today().strftime("%Y-%m"))
+        #Generamos un nombre para el archivo(random), junto con la extension: "342ewrw2342.jpg"(ejemplo)
+        nombre_archivo = '{}.{}'.format(uuid4().hex, extensionImagen)
+        
+        #Unimos con os.path, la MEDIA_ROOT, junto con el archivo: Propiedades/yyyy-mm/342ewrw2342.jpg (ejemplo)
+        return os.path.join(rutaImagen, nombre_archivo)
+    
     id_propiedad_ruta_documento = models.AutoField(db_column='ID_Propiedad_Ruta_Documento', primary_key=True)
-    id_propiedad_documento = models.ForeignKey(Propiedad, db_column='ID_Propiedad_Documento', on_delete=models.CASCADE)  # Field name made lowercase.
-    ruta_pd = models.ImageField(upload_to ='propiedad/',db_column='Ruta_PD', max_length=100)  # Field name made lowercase.
+    id_propiedad_documento = models.ForeignKey(Propiedad, db_column='ID_Propiedad_Documento', on_delete=models.CASCADE, verbose_name="Propiedad")  # Field name made lowercase.
+    ruta_pd = models.ImageField(upload_to =generateRutaPropiedad,db_column='Ruta_PD', max_length=100, verbose_name="Ruta de imagen")  # Field name made lowercase.
+
+    #Cuando se borra el registro en la BD, tambien se borra la imagen, esto se logra sobreescribiendo el metodo delete:
+    def delete(self, *args, **kwargs):
+        if os.path.isfile(self.ruta_pd.path):
+            os.remove(self.ruta_pd.path)
+
+        super(PropiedadRutaDocumento, self).delete(*args, **kwargs)
+
 
     class Meta:
-        verbose_name_plural = "Listado de Propiedades"
-        verbose_name = "Listado de Propiedades"
+        verbose_name_plural = "Imagenes de Propiedades"
+        verbose_name = "Imagenes de Propiedades"
         db_table = 'propiedad_ruta_documento'
         constraints = [models.UniqueConstraint(fields=['id_propiedad_documento', 'ruta_pd'], name='PropiedadRutaDocumento_pk')]
 
+    
     def __str__(self):
-        return f"Propiedad N°{self.id_propiedad_ruta_documento}"
+        return f"Imagen - Propiedad N°{self.id_propiedad_ruta_documento}"
 
 class PropiedadRutaImagen(models.Model):
     id_propiedad_ruta_imagen = models.AutoField(db_column='ID_Propiedad_Ruta_Imagen', primary_key=True)
@@ -180,14 +228,14 @@ class Cita(models.Model):
         	('AG', 'Agendada'),
     )
     nro_cita = models.AutoField(verbose_name="Cita N°", db_column='NRO_Cita', primary_key=True)  # Field name made lowercase.
-    f_creacion_cita = models.DateField(db_column='F_Creacion_Cita', auto_now_add=True)  #Fecha en la que se crea la cita, independientemente del tipo de cita que sea.
-    h_creacion_cita = models.TimeField(db_column='H_Creacion_Cita', auto_now_add=True)  #Hora en la que se crea la cita, independientemente del tipo de cita que sea.
-    f_asignacion_cita = models.DateField(db_column='F_Asignacion_Cita', blank=True, null=True)  # Field name made lowercase.
-    h_asignacion_cita = models.TimeField(db_column='H_Asignacion_Cita', blank=True, null=True)  # Field name made lowercase.
-    f_cita = models.DateField(db_column='F_Cita',verbose_name='Fecha', null=True)  # Field name made lowercase.
-    h_cita = models.TimeField(db_column='H_Cita',verbose_name='Hora', null=True)  # Field name made lowercase.
-    f_concluye_cita = models.DateField(db_column='F_Concluye_Cita', blank=True, null=True)  # Field name made lowercase.
-    h_concluye_cita = models.TimeField(db_column='H_Concluye_Cita', blank=True, null=True)  # Field name made lowercase.
+    f_creacion_cita = models.DateField(db_column='F_Creacion_Cita', verbose_name="Fecha de creacion - Cita")  #Fecha en la que se crea la cita, independientemente del tipo de cita que sea.
+    h_creacion_cita = models.TimeField(db_column='H_Creacion_Cita', verbose_name="Hora de creacion - Cita")  #Hora en la que se crea la cita, independientemente del tipo de cita que sea.
+    f_asignacion_cita = models.DateField(db_column='F_Asignacion_Cita', blank=True, null=True, verbose_name="Fecha de asignacion - Cita")  # Field name made lowercase.
+    h_asignacion_cita = models.TimeField(db_column='H_Asignacion_Cita', blank=True, null=True, verbose_name="Hora de asignacion - Cita")  # Field name made lowercase.
+    f_cita = models.DateField(db_column='F_Cita',verbose_name='Fecha de Cita', null=True)  # Field name made lowercase.
+    h_cita = models.TimeField(db_column='H_Cita',verbose_name='Hora de Cita', null=True)  # Field name made lowercase.
+    f_concluye_cita = models.DateField(db_column='F_Concluye_Cita', blank=True, null=True, verbose_name="Fecha de finalizacion - Cita")  # Field name made lowercase.
+    h_concluye_cita = models.TimeField(db_column='H_Concluye_Cita', blank=True, null=True, verbose_name="Hota de finalizacion - Cita")  # Field name made lowercase.
     secre_asigna_cita = models.ForeignKey(Usuario,verbose_name="Secretaria a cargo", db_column='Secre_Asigna_Cita', blank=True, null=True, on_delete=models.RESTRICT, related_name='secre_cita',limit_choices_to={'tipo_usuario':'ES'})  #Secretaria quien realiza la cita.
     ai_atiende_cita = models.ForeignKey(Usuario,verbose_name="Agente inmobiliario asignado", db_column='AI_Atiende_Cita', blank=True, null=True, on_delete=models.RESTRICT, related_name='ai_cita', limit_choices_to={'tipo_usuario':'EAI'})  #Agente, quien esta cargo esa cita.
     client_solicita_cita = models.ForeignKey(Usuario,verbose_name="Cliente quien solicita", db_column='Client_Solicita_Cita', on_delete=models.RESTRICT, limit_choices_to=Q(tipo_usuario='CP') | Q(tipo_usuario='CC')) #Cliente quien solicita la cita.

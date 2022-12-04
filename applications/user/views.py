@@ -2,7 +2,7 @@ import datetime
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import TemplateView, ListView, CreateView, View
 from django.views.generic.edit import FormView
-from .forms import LoginUsuarioForm, CitaUpdateForm, CitaAtendidaForm
+from .forms import LoginUsuarioForm, CitaSolicitudForm, CitaAgendadaForm
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect
@@ -52,18 +52,21 @@ def CitaList(request):
 #Vista encargada de agregar una nueva cita.(Ya sea de solicitud o agendada)
 def agregarCita(request):
     data = {
-            'form': CitaUpdateForm()
+            'form': CitaAgendadaForm()
         }
 
     if request.method=='POST':
 
-        formulario = CitaUpdateForm(data=request.POST, files=request.FILES)
+        formulario = CitaAgendadaForm(data=request.POST, files=request.FILES)
         if formulario.is_valid():
-            formulario.f_creacion_cita= datetime.date.today()
-            formulario.h_creacion_cita= datetime.datetime.now().strftime('%H:%M')
-            formulario.save()
+            cita = formulario.save(commit=False)
+            print(cita.ai_atiende_cita)
+            cita.tipo_cita = 'AG'
+            cita.f_creacion_cita = cita.f_cita
+            cita.h_creacion_cita = cita.h_cita
+            cita.save()
             messages.success(request, 'Cita agendada con exito')
-            return redirect(to='solicitudCita')
+            return redirect(to='agendaSecretario')
         else:
             data["form"] = formulario
             messages.error(request,"Error al crear cita.")
@@ -75,10 +78,10 @@ def modificarCitaSolicitud(request, nro_cita):
     cita = get_object_or_404(Cita, nro_cita=nro_cita)
 
     data = {
-        'form': CitaUpdateForm(instance=cita)
+        'form': CitaSolicitudForm(instance=cita)
     }
     if request.method == 'POST':
-        formulario = CitaUpdateForm(data=request.POST, instance=cita, files=request.FILES)
+        formulario = CitaSolicitudForm(data=request.POST, instance=cita, files=request.FILES)
         if formulario.is_valid():
             formulario.save()
             messages.success(request, 'Cita agendada con exito')
@@ -91,10 +94,10 @@ def modificarCitaAgendada(request, nro_cita):
     cita = get_object_or_404(Cita, nro_cita=nro_cita)
 
     data = {
-        'form': CitaUpdateForm(instance=cita)
+        'form': CitaAgendadaForm(instance=cita)
     }
     if request.method == 'POST':
-        formulario = CitaUpdateForm(data=request.POST, instance=cita, files=request.FILES)
+        formulario = CitaAgendadaForm(data=request.POST, instance=cita, files=request.FILES)
         if formulario.is_valid():
             formulario.save()
             messages.success(request, 'Cita modificada con exito')

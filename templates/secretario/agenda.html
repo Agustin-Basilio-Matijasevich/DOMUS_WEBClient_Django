@@ -42,14 +42,16 @@
                           <td>{{ cita.propiedad_involucrada }}</td>
                           {% if cita.f_concluye_cita is None and cita.h_concluye_cita is None %}
                           <td class="text-primary">En proceso</td>
+                          <td>
+                            <a class="btn btn-success" href="{% url 'modificarCitaAgendada' cita.nro_cita %}">Editar</a>
+                            <a class="btn btn-danger" href="{% url 'eliminarCitaAgendada' cita.nro_cita %}">Eliminar</a>
+                          </td>
                           {% else %}
                           <td class="text-danger">Realizado</td>
-                          {% endif %}
-
                           <td>
-                              <a class="btn btn-success" href="{% url 'modificarCitaAgendada' cita.nro_cita %}">Editar</a>
-                              <a class="btn btn-danger" href="{% url 'eliminarCitaAgendada' cita.nro_cita %}">Eliminar</a>
+                            <a class="btn btn-danger" href="{% url 'eliminarCitaAgendada' cita.nro_cita %}">Eliminar</a>
                           </td>
+                          {% endif %}
                       </tr>
                   {% endfor %}
 

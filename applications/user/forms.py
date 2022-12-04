@@ -42,42 +42,8 @@ class LoginUsuarioForm(forms.Form):
 
         return self.cleaned_data
 
-class DateInput(forms.DateInput):
-    input_type = 'date'
-
-class DateTime2(forms.DateInput):
-    input_type = 'time'
-
-class InputNumber(forms.DateInput):
-    input_type= 'number'
-
-
-
-
-class CitaForm(forms.Form):
-    Cliente = forms.CharField(max_length=50, required=True)
-    fecha = forms.DateField(widget=DateInput(attrs={
-        'min': datetime.datetime.strftime(datetime.datetime.now(),'%Y-%m-%d'),
-    }))
-    hora= forms.TimeField(widget=DateTime2)
-    Agente_Inmobiliario = forms.CharField(max_length=50, required=True)
-    Codigo_de_Propiedad = forms.IntegerField()
-    tipo_de_cita= forms.CharField(widget=forms.Select(choices=TIPO_CITA))
-
-    def clean_agente(self):
-        clienteForm = self.cleaned_data['Cliente']
-        agenteForm = self.cleaned_data['Agente_Inmobiliario']
-        agenteExist = Usuario.objects.get(nombres=agenteForm)
-
-        if agenteExist:
-            return agenteForm
-        else:
-            raise forms.ValidationError("No existe ningun agente inmboliario con ese nombre.")
-        return agenteForm
-
-
-class CitaAtendidaForm(forms.ModelForm):
-    f_concluye_cita = forms.DateField(
+class CitaAgendadaForm(forms.ModelForm):
+    f_cita = forms.DateField(
         label='Fecha',
         widget=forms.DateInput(
             format='%Y-%m-%d',
@@ -88,7 +54,7 @@ class CitaAtendidaForm(forms.ModelForm):
             }),
             input_formats=('%Y-%m-%d',),
     )
-    h = forms.TimeField(
+    h_cita = forms.TimeField(
         label='Hora',
         widget=forms.TimeInput(
             format='%H:%M',
@@ -98,15 +64,18 @@ class CitaAtendidaForm(forms.ModelForm):
             }),
             input_formats=('%H:%M',),
     )
+
     class Meta:
-        model= Cita
+        model = Cita
         fields = (
-            'f_concluye_cita',
-            'h_concluye_cita',
+            'client_solicita_cita',
+            'f_cita',
+            'h_cita',
+            'ai_atiende_cita',
+            'propiedad_involucrada',
         )
 
-
-class CitaUpdateForm(forms.ModelForm):
+class CitaSolicitudForm(forms.ModelForm):
     f_cita = forms.DateField(
         label='Fecha',
         widget=forms.DateInput(
