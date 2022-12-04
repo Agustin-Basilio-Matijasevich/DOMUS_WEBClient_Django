@@ -60,7 +60,6 @@ def agregarCita(request):
         formulario = CitaAgendadaForm(data=request.POST, files=request.FILES)
         if formulario.is_valid():
             cita = formulario.save(commit=False)
-            print(cita.ai_atiende_cita)
             cita.tipo_cita = 'AG'
             cita.f_creacion_cita = cita.f_cita
             cita.h_creacion_cita = cita.h_cita
@@ -99,7 +98,9 @@ def modificarCitaAgendada(request, nro_cita):
     if request.method == 'POST':
         formulario = CitaAgendadaForm(data=request.POST, instance=cita, files=request.FILES)
         if formulario.is_valid():
-            formulario.save()
+            cita = formulario.save(commit=False)
+            cita.tipo_cita = 'AG'
+            cita.save()
             messages.success(request, 'Cita modificada con exito')
             return redirect(to='agendaSecretario')
         data['form'] = formulario

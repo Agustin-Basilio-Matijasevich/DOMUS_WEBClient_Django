@@ -28,7 +28,7 @@
                         <td>{{ cita.client_solicita_cita }}</td>
                         <td>#{{ cita.propiedad_involucrada.id_propiedad }}</td>
                         <td>
-                            <a class="btn btn-success" href="{% url 'modificarCitaSolicitud' cita.nro_cita %}">Agendar</a>
+                            <a class="btn btn-success" href="{% url 'modificarCitaAgendada' cita.nro_cita %}">Agendar</a>
                             <a class="btn btn-danger" href="{% url 'eliminarCitaSolicitud' cita.nro_cita %}">Eliminar</a>
                         </td>
                     </tr>
