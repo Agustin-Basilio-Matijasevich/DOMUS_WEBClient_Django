@@ -18,8 +18,9 @@
 {% endblock tittle %}
 
 {% block content %}
-{% if citas %}
+
 <div class="d-flex align-items-center justify-content-center p-4">
+    {% if citas %}
     <div class="card text-center" style="width: 80rem;">
       <div class="card-body">
         <h5 class="card-title">Actividades</h5>
@@ -74,13 +75,30 @@
                             </td>
                         </tr>
                     {% endfor %}
-
             </table>
+        </div>
+    </div>
           {% else %}
+          <div class="card text-center" style="width: 80rem;">
+            <div class="card-body">
+              <h5 class="card-title">Actividades</h5>
+              <h6 class="card-subtitle mb-2 text-muted">Filtre una fecha, y verifique si tiene actividades programadas.</h6>
+              <div class="d-flex justify-content-center">
+      
+                  <form action="{% url 'filtrarCitasInmobiliaria' %}" method="GET">
+                      <input type="date" name="date" disabled required>
+                      <input type="submit" value="Enviar" disabled class="btn btn-primary">
+                  </form>
+                  &nbsp;
+                  <form action="{% url 'agendaInmobiliaria' %}" method="GET">
+                      <input type="submit" value="Ver todas las citas" disabled class="btn btn-secondary">
+                  </form>
+                  <br>
+            </div>
+          </div>
           <h3 class="text text-center p-2">No existen citas programadas actualmente.</h3>
           {% endif %}
-      </div>
-    </div>
+
   </div>
 
 

@@ -198,8 +198,7 @@ def atenderCitaAgendada(request, nro_cita):
 
     messages.success(request, 'Cita atendida con exito')
 
-    return render(request, 'agenteInmobiliario/agenda.html')
-
+    return redirect(to='agendaInmobiliaria')
 
 class CatalogoPropiedadesAgente(ListView):
     template_name = 'agenteInmobiliario/propiedades.html'
