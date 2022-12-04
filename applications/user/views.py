@@ -60,9 +60,17 @@ def agregarCita(request):
         formulario = CitaAgendadaForm(data=request.POST, files=request.FILES)
         if formulario.is_valid():
             cita = formulario.save(commit=False)
+            fecha = cita.f_cita
+            hora = cita.h_cita
+
+            secretario = Usuario.objects.get(id=request.user.id)
+            print(request.user)
+            cita.secre_asigna_cita = secretario
             cita.tipo_cita = 'AG'
-            cita.f_creacion_cita = cita.f_cita
-            cita.h_creacion_cita = cita.h_cita
+            cita.f_creacion_cita = fecha
+            cita.h_creacion_cita = hora
+            cita.f_asignacion_cita = fecha
+            cita.h_asignacion_cita = hora
             cita.save()
             messages.success(request, 'Cita agendada con exito')
             return redirect(to='agendaSecretario')
@@ -198,7 +206,8 @@ def atenderCitaAgendada(request, nro_cita):
 
     messages.success(request, 'Cita atendida con exito')
 
-    return redirect(to='agendaInmobiliaria')
+    return render(request, 'agenteInmobiliario/agenda.html')
+
 
 class CatalogoPropiedadesAgente(ListView):
     template_name = 'agenteInmobiliario/propiedades.html'
