@@ -20,7 +20,8 @@
                     <p class="text-secondary">{{ p.id_propiedad_documento.direccion }}</p>
                     <a>Estado de Propiedad: {{ p.id_propiedad_documento.get_estado_propiedad_display }}</a><br>
                     <a>Dueño de Propiedad: {{ p.id_propiedad_documento.id_dueño}} </a><br>
-                    <p>Metros Cuadrados: {{ p.id_propiedad_documento.metros_cuadrados }}</p>
+                    <a>Metros Cuadrados: {{ p.id_propiedad_documento.metros_cuadrados }}</a><br>
+                    <p>Propiedad N° {{ p.id_propiedad_documento.id_propiedad }}</p>
 
                     <h4>${{ p.id_propiedad_documento.precio_sugerido }}</h6>
 
