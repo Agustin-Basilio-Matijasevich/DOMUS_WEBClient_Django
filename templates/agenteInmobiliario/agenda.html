@@ -29,7 +29,7 @@
 
             <form action="{% url 'filtrarCitasInmobiliaria' %}" method="GET">
                 <input type="date" name="date" required>
-                <input type="submit" value="Enviar" class="btn btn-primary">
+                <input type="submit" value="Mostrar" class="btn btn-primary">
             </form>
             &nbsp;
             <form action="{% url 'agendaInmobiliaria' %}" method="GET">
@@ -60,7 +60,7 @@
                             <td>{{ cita.client_solicita_cita.id }}</td>
                             <td>{{ cita.client_solicita_cita.nombres }}</td>
                             <td>{{ cita.client_solicita_cita.apellidos }}</td>
-                            <td>{{ cita.propiedad_involucrada }}</td>
+                            <td>#{{ cita.propiedad_involucrada.id_propiedad }}</td>
                             <td>{{ cita.propiedad_involucrada.direccion }}</td>
                             <td>{{ cita.client_solicita_cita.email }}</td>
 
@@ -69,7 +69,7 @@
                                     {% csrf_token %}
                                     <input type="hidden" value="{{ cita.f_cita }}" name="f_concluye_cita">
                                     <input type="hidden" value="{{ cita.H_cita }}" name="H_concluye_cita">
-                                    <input type="submit" class="btn btn-info" value="Atender cita">
+                                    <input type="submit" class="btn btn-success" value="Atender cita">
                                 </form>
 
                             </td>
@@ -86,12 +86,12 @@
               <div class="d-flex justify-content-center">
       
                   <form action="{% url 'filtrarCitasInmobiliaria' %}" method="GET">
-                      <input type="date" name="date" disabled required>
-                      <input type="submit" value="Enviar" disabled class="btn btn-primary">
+                      <input type="date" name="date" required>
+                      <input type="submit" value="Mostrar" class="btn btn-primary">
                   </form>
                   &nbsp;
                   <form action="{% url 'agendaInmobiliaria' %}" method="GET">
-                      <input type="submit" value="Ver todas las citas" disabled class="btn btn-secondary">
+                      <input type="submit" value="Ver todas las citas" class="btn btn-secondary">
                   </form>
                   <br>
             </div>

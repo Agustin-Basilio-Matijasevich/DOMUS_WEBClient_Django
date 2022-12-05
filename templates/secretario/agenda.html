@@ -24,7 +24,7 @@
       </div>
       <hr>
 
-          <table class="table table-striped table-hover table-resposive-sm">
+          <table class="table table-striped table-hover table-resposive-sm text-center">
               <tr>
                   <th> Fecha </th>
                   <th> Hora </th>
@@ -39,7 +39,7 @@
                           <td>{{ cita.f_cita }}</td>
                           <td>{{ cita.h_cita }}</td>
                           <td>{{ cita.ai_atiende_cita }}</td>
-                          <td>{{ cita.propiedad_involucrada }}</td>
+                          <td>#{{ cita.propiedad_involucrada.id_propiedad }}</td>
                           {% if cita.f_concluye_cita is None and cita.h_concluye_cita is None %}
                           <td class="text-primary">En proceso</td>
                           <td>
@@ -59,12 +59,12 @@
         {% else %}
         <div class="d-flex">
           <form action="{% url 'buscarCita' %}" method="GET">
-            <input type="date" name="date" disabled required>
-            <input type="submit" value="Mostrar" disabled class="btn btn-primary">
+            <input type="date" name="date" required>
+            <input type="submit" value="Mostrar" class="btn btn-primary">
           </form>
           &nbsp;
           <form action="{% url 'agendaSecretario' %}" method="GET">
-            <input type="submit" value="Ver todas las citas" disabled class="btn btn-secondary">
+            <input type="submit" value="Ver todas las citas" class="btn btn-secondary">
           </form>
         </div>
         <hr>
