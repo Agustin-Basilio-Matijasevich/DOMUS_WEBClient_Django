@@ -203,10 +203,19 @@ def atenderCitaAgendada(request, nro_cita):
     cita.f_concluye_cita= datetime.date.today()
     cita.h_concluye_cita= datetime.datetime.now().strftime('%H:%M')
     cita.save()
+    
+    citas = Cita.objects.filter(
+        tipo_cita='AG',
+        f_concluye_cita = None,
+        h_concluye_cita= None,
+        ai_atiende_cita= request.user)
 
-    messages.success(request, 'Cita atendida con exito')
+    data = {
+            'citas': citas
+    }
+    
 
-    return render(request, 'agenteInmobiliario/agenda.html')
+    return render(request, 'agenteInmobiliario/agenda.html', data)
 
 
 class CatalogoPropiedadesAgente(ListView):
